@@ -5,6 +5,7 @@
  */
 package com.sergiboadas.sensors.in.formula1.util;
 
+import com.sergiboadas.sensors.in.formula1.aggregator.SensorsDataAggregator;
 import java.io.File;
 
 /**
@@ -13,10 +14,12 @@ import java.io.File;
  */
 public class SensorFileReader implements Runnable {
 
+    private SensorsDataAggregator aggregator;
     private File file;
 
-    public SensorFileReader(String filePath) {
-        file = new File(filePath);
+    public SensorFileReader(SensorsDataAggregator aggregator, String filePath) {
+        this.aggregator = aggregator;
+        this.file = new File(filePath);
     }
 
     @Override

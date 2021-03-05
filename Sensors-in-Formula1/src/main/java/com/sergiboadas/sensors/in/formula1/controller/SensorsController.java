@@ -5,6 +5,7 @@
  */
 package com.sergiboadas.sensors.in.formula1.controller;
 
+import com.sergiboadas.sensors.in.formula1.aggregator.SensorsDataAggregator;
 import com.sergiboadas.sensors.in.formula1.util.SensorFileReader;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,8 +20,10 @@ public class SensorsController {
     
     private ExecutorService executor;
     private List<SensorFileReader> listSensors;
+    private SensorsDataAggregator aggregator;
     
     public SensorsController(List<String> filesPath) {
+        aggregator = new SensorsDataAggregator();
         listSensors = createSensorFilesReders(filesPath);
         
         // Create a thread pool with as many threads as the system where the program has
@@ -28,10 +31,14 @@ public class SensorsController {
     }
 
     private List<SensorFileReader> createSensorFilesReders(List<String> filesPath) {
-        return filesPath.stream().map(path -> new SensorFileReader(path)).collect(Collectors.toList());
+        return filesPath.stream().map(path -> new SensorFileReader(aggregator, path)).collect(Collectors.toList());
     }
 
-    public void readIndefinitelySensors() {
+    public void readIndefinitelySensorsFiles() {
         // TODO -> Exectute all "runs" methods of each sensorFileRead (class who implements interfice Runnable) (multithreading)
+    }
+
+    public void stopReadingSensorsFiles() {
+        // TODO -> Stop all threads which are reading indefenedly (created in runs methods of each sensorFileRead)
     }
 }

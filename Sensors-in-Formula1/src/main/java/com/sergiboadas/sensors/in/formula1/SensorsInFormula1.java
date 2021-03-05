@@ -33,12 +33,14 @@ public class SensorsInFormula1 {
         // Read all files of resources folder
         String resourcesPath = "resources/";
         List<String> filesPaths = getFilesPathsOfTheFolder(resourcesPath);
-         filesPaths.forEach(path -> System.out.println("Path file: " + path));
+        filesPaths.forEach(path -> System.out.println("Path file: " + path));
     
         // Create the sensors controller
         SensorsController sensorsController = new SensorsController(filesPaths);
         
-        sensorsController.readIndefinitelySensors();
+        sensorsController.readIndefinitelySensorsFiles();
+        
+        sensorsController.stopReadingSensorsFiles();
     }
     
 }
