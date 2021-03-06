@@ -6,6 +6,7 @@
 package com.sergiboadas.sensors.in.formula1.util;
 
 import com.sergiboadas.sensors.in.formula1.aggregator.SensorsDataAggregator;
+import com.sergiboadas.sensors.in.formula1.model.SensorData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -29,16 +30,20 @@ public class SensorFileReader implements Runnable {
 
     @Override
     public void run() {
+        SensorData sensorData;
         String line;
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(file));
             while (!stopReadingFile) {
                 line = reader.readLine();
-                System.out.println("Thread: " + Thread.currentThread().getName() + " | File: " + file.getName() + " | Line: " + line);
                 if (line == null) {
                     Thread.sleep(3000);
                     System.out.println("Thread sleep - 3s");
+                    continue;
                 }
+                System.out.println("Thread: " + Thread.currentThread().getName() + " | File: " + file.getName() + " | Line: " + line);
+                sensorData = processLine(line);
+                aggregator.addSensorData(sensorData);
             }
             reader.close();
         } catch (InterruptedException ex) {
@@ -54,4 +59,8 @@ public class SensorFileReader implements Runnable {
         this.stopReadingFile = true;
     }
 
+    private SensorData processLine(String line) {
+        String[] values = line.split(",");
+        return new SensorData(values[0], Float.parseFloat(values[1]));
+    }
 }

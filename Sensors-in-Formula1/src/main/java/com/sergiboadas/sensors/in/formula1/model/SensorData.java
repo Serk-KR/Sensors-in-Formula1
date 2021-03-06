@@ -14,6 +14,11 @@ public class SensorData {
     private String time;
     private Float speed;
 
+    public SensorData(String time, Float speed) {
+        this.time = time;
+        this.speed = speed;
+    }
+    
     public String getTime() {
         return time;
     }
@@ -30,4 +35,8 @@ public class SensorData {
         this.speed = speed;
     }
 
+    @Override
+    public String toString() {
+        return "SensorData{" + "time=" + time + ", speed=" + speed + '}';
+    }
 }

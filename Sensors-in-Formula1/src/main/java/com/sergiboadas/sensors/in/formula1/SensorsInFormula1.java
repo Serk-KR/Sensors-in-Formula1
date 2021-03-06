@@ -7,6 +7,7 @@ package com.sergiboadas.sensors.in.formula1;
 
 import com.sergiboadas.sensors.in.formula1.controller.SensorsController;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class SensorsInFormula1 {
         return listPaths;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, FileNotFoundException {
         // Read all files of resources folder
         String resourcesPath = "resources/";
         List<String> filesPaths = getFilesPathsOfTheFolder(resourcesPath);
@@ -42,6 +43,10 @@ public class SensorsInFormula1 {
         
         Thread.sleep(10000); // Stop the execution 10 seconds and then finalize it
         sensorsController.stopReadingSensorsFiles();
+        
+        // Create a results output file 
+        sensorsController.writeCsvWithTheResults();
     }
     
 }
+ 
