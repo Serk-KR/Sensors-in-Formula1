@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class SensorsController {
     
     private ExecutorService executor;
-    private List<SensorFileReader> listSensors;
+    private List<SensorFileReader> listSensorsReaders;
     private SensorsDataAggregator aggregator;
     
     public SensorsController(List<String> filesPath) {
         aggregator = new SensorsDataAggregator();
-        listSensors = createSensorFilesReders(filesPath);
+        listSensorsReaders = createSensorFilesReders(filesPath);
         
         // Create a thread pool with as many threads as the system where the program has
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -35,7 +35,9 @@ public class SensorsController {
     }
 
     public void readIndefinitelySensorsFiles() {
-        // TODO -> Exectute all "runs" methods of each sensorFileRead (class who implements interfice Runnable) (multithreading)
+        listSensorsReaders.forEach(sensorReader -> {
+            executor.execute(sensorReader);
+        });
     }
 
     public void stopReadingSensorsFiles() {

@@ -7,6 +7,10 @@ package com.sergiboadas.sensors.in.formula1.util;
 
 import com.sergiboadas.sensors.in.formula1.aggregator.SensorsDataAggregator;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 
 /**
  *
@@ -24,7 +28,24 @@ public class SensorFileReader implements Runnable {
 
     @Override
     public void run() {
-        // TODO - READ DATA FILE
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String line;
+        try {
+            LineNumberReader reader = new LineNumberReader(new FileReader(file));
+            while (true) {
+                line = reader.readLine();
+                System.out.println("Thread: " + Thread.currentThread().getName() + " | File: " + file.getName() + " | Line: " + line);
+                if (line == null) {
+                    Thread.sleep(3000);
+                    System.out.println("Thread sleep - 3s");
+                }
+            }
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
+
 }
