@@ -48,7 +48,7 @@ public class SensorFileReader implements Runnable {
                 sensorData = processLine(line);
                 mutex.acquire();
                 aggregator.addSensorData(sensorData);
-                mutex.release();
+                mutex.release(); 
             }
             reader.close();
             System.out.println("Thread: " + Thread.currentThread().getName() + " | Close the file: " + file.getName());
