@@ -8,9 +8,11 @@ package com.sergiboadas.sensors.in.formula1;
 import com.sergiboadas.sensors.in.formula1.controller.SensorsController;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +33,8 @@ public class SensorsInFormula1 {
     }
 
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+        System.out.println("INITIALIZING THE PROGRAM...");
+        
         // Read all files of resources folder
         String resourcesPath = "resources/";
         List<String> filesPaths = getFilesPathsOfTheFolder(resourcesPath);
@@ -39,14 +43,21 @@ public class SensorsInFormula1 {
         // Create the sensors controller
         SensorsController sensorsController = new SensorsController(filesPaths);
         
+        // Calling to the main method
         sensorsController.readIndefinitelySensorsFiles();
         
-        Thread.sleep(10000); // Stop the execution 10 seconds and then finalize it
-        sensorsController.stopReadingSensorsFiles();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter some key/word and press \"Enter\" to stop the execution");
+        String userInput;
+        boolean stopExecution = false;
+        while (!stopExecution) {
+            userInput = scanner.nextLine();
+            stopExecution = ("FINISH".equals(userInput));
+        }
         
-        // Create a results output file 
-        sensorsController.writeCsvWithTheResults();
+        // Stop the program
+        System.out.println("STOPPING THE PROGRAM...");
+        sensorsController.stopReadingSensorsFiles();
     }
-    
 }
  

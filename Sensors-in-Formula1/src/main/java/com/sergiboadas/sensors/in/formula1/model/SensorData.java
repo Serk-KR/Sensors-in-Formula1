@@ -11,19 +11,19 @@ package com.sergiboadas.sensors.in.formula1.model;
  */
 public class SensorData {
 
-    private String time;
+    private Long time;
     private Float speed;
 
-    public SensorData(String time, Float speed) {
+    public SensorData(Long time, Float speed) {
         this.time = time;
         this.speed = speed;
     }
     
-    public String getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 
@@ -38,5 +38,9 @@ public class SensorData {
     @Override
     public String toString() {
         return "SensorData{" + "time=" + time + ", speed=" + speed + '}';
+    }
+    
+    public Float getAverage (Float speed2) {
+        return (this.speed + speed) / 2;
     }
 }

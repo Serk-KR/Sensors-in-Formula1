@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.concurrent.Semaphore;
 
 /**
  *
@@ -22,8 +23,10 @@ public class SensorFileReader implements Runnable {
     private SensorsDataAggregator aggregator;
     private File file;
     private boolean stopReadingFile = false;
+    private Semaphore mutex;
 
-    public SensorFileReader(SensorsDataAggregator aggregator, String filePath) {
+    public SensorFileReader(Semaphore mutex, SensorsDataAggregator aggregator, String filePath) {
+        this.mutex = mutex;
         this.aggregator = aggregator;
         this.file = new File(filePath);
     }
@@ -38,14 +41,18 @@ public class SensorFileReader implements Runnable {
                 line = reader.readLine();
                 if (line == null) {
                     Thread.sleep(3000);
-                    System.out.println("Thread sleep - 3s");
+//                    System.out.println("Thread sleep - 3s");
                     continue;
                 }
                 System.out.println("Thread: " + Thread.currentThread().getName() + " | File: " + file.getName() + " | Line: " + line);
                 sensorData = processLine(line);
+                mutex.acquire();
                 aggregator.addSensorData(sensorData);
+                mutex.release();
             }
             reader.close();
+            System.out.println("Thread: " + Thread.currentThread().getName() + " | Close the file: " + file.getName());
+
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         } catch (FileNotFoundException ex) {
@@ -54,13 +61,13 @@ public class SensorFileReader implements Runnable {
             ex.printStackTrace();
         }
     }
-    
+
     public void stopReading() {
         this.stopReadingFile = true;
     }
 
     private SensorData processLine(String line) {
         String[] values = line.split(",");
-        return new SensorData(values[0], Float.parseFloat(values[1]));
+        return new SensorData(Long.parseLong(values[0]), Float.parseFloat(values[1]));
     }
 }
