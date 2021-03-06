@@ -41,17 +41,14 @@ public class SensorFileReader implements Runnable {
                 line = reader.readLine();
                 if (line == null) {
                     Thread.sleep(3000);
-//                    System.out.println("Thread sleep - 3s");
                     continue;
                 }
-                System.out.println("Thread: " + Thread.currentThread().getName() + " | File: " + file.getName() + " | Line: " + line);
                 sensorData = processLine(line);
                 mutex.acquire();
                 aggregator.addSensorData(sensorData);
                 mutex.release(); 
             }
             reader.close();
-            System.out.println("Thread: " + Thread.currentThread().getName() + " | Close the file: " + file.getName());
 
         } catch (InterruptedException ex) {
             ex.printStackTrace();

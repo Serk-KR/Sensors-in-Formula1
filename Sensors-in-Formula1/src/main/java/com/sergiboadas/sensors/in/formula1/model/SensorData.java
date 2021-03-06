@@ -39,8 +39,4 @@ public class SensorData {
     public String toString() {
         return "SensorData{" + "time=" + time + ", speed=" + speed + '}';
     }
-    
-    public Float getAverage (Float speed2) {
-        return (this.speed + speed) / 2;
-    }
 }

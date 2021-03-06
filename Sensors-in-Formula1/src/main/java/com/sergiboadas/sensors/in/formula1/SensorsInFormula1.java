@@ -33,12 +33,11 @@ public class SensorsInFormula1 {
     }
 
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-        System.out.println("INITIALIZING THE PROGRAM...");
+        System.out.println("------ INITIALIZING THE PROGRAM... ------");
         
         // Read all files of resources folder
         String resourcesPath = "resources/";
         List<String> filesPaths = getFilesPathsOfTheFolder(resourcesPath);
-        filesPaths.forEach(path -> System.out.println("Path file: " + path));
     
         // Create the sensors controller
         SensorsController sensorsController = new SensorsController(filesPaths);
@@ -47,7 +46,7 @@ public class SensorsInFormula1 {
         sensorsController.readIndefinitelySensorsFiles();
         
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter some key/word and press \"Enter\" to stop the execution");
+        System.out.println("Enter the word \"FINISH\" and then press \"Enter\" to stop the execution");
         String userInput;
         boolean stopExecution = false;
         while (!stopExecution) {
@@ -56,7 +55,7 @@ public class SensorsInFormula1 {
         }
         
         // Stop the program
-        System.out.println("STOPPING THE PROGRAM...");
+        System.out.println("------ STOPPING THE PROGRAM... ------");
         sensorsController.stopReadingSensorsFiles();
     }
 }

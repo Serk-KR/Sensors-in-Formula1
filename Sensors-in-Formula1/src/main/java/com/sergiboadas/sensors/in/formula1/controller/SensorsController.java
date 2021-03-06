@@ -11,17 +11,17 @@ import com.sergiboadas.sensors.in.formula1.util.SensorFileReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +35,6 @@ public class SensorsController {
     private SensorsDataAggregator aggregator;
     private final String outputFileName = "AverageSpeed_";
     private int outputFilesGeneraded = 0;
-    private TimerTask timerTask;
     private Timer timer;
     private Semaphore mutex;
 
@@ -56,7 +55,9 @@ public class SensorsController {
         this.listSensorsReaders.forEach(sensorReader -> {
             this.executor.execute(sensorReader);
         });
-        this.timerTask = new TimerTask() {
+
+        this.timer = new Timer();
+        this.timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -67,33 +68,55 @@ public class SensorsController {
                     ex.printStackTrace();
                 }
             }
-        };
-        this.timer = new Timer();
-        this.timer.schedule(timerTask, 0, 10000);
+        }, 0, 10000);
     }
 
     public void stopReadingSensorsFiles() throws FileNotFoundException, InterruptedException {
-        System.out.println("stopReadingSensorsFiles");
-        this.listSensorsReaders.forEach(sensorReader -> sensorReader.stopReading());
-        System.out.println("Cancel timer");
-        this.timer.cancel();
-        System.out.println("Executor shutdown");
-        this.executor.shutdown();
+        this.listSensorsReaders.forEach(sensorReader -> sensorReader.stopReading());  // Stopping reading all the files
+        this.timer.cancel();        // Cancel timer
+        this.executor.shutdown();   // Shutdown executor
     }
 
     private void writeCsvWithTheResults() throws FileNotFoundException, InterruptedException {
-        String fileName = this.outputFileName + this.outputFilesGeneraded + ".csv";
-        System.out.println("Results output file name: " + fileName);
-        System.out.println("writeCsvWithTheResults1");
         mutex.acquire();
-        System.out.println("writeCsvWithTheResults2");
         LinkedBlockingQueue<SensorData> results = this.aggregator.getSensorsData();
         mutex.release();
-
-        try (PrintWriter writer = new PrintWriter(new File(fileName))) {
-            results.stream().sorted(Comparator.comparingLong(SensorData::getTime)).forEach(writer::println);
+        if (!results.isEmpty()) {
+            List<SensorData> resultsWithTheAverage = transformDataToFormatNeeded(results);
+            printTheResultsToOutputFile(resultsWithTheAverage);
         }
-        System.out.println("File generated");
+    }
+
+    private List<SensorData> transformDataToFormatNeeded(LinkedBlockingQueue<SensorData> results) {
+        List<SensorData> resultsOrdered = results.stream().sorted(Comparator.comparingLong(SensorData::getTime)).collect(Collectors.toList());
+
+        List<SensorData> resultsWithTheAverage = new LinkedList<>();
+        SensorData firstData = resultsOrdered.get(0);
+        Long timeBefore = firstData.getTime();
+        float sumOfSpeeds = 0;
+        int numberOfSpeeds = 0;
+        for (SensorData data : resultsOrdered) {
+            if (!Objects.equals(timeBefore, data.getTime())) {
+                resultsWithTheAverage.add(new SensorData(timeBefore, sumOfSpeeds / numberOfSpeeds));
+                timeBefore = data.getTime();
+                sumOfSpeeds = data.getSpeed();
+                numberOfSpeeds = 1;
+            } else {
+                sumOfSpeeds += data.getSpeed();
+                numberOfSpeeds++;
+            }
+        }
+        resultsWithTheAverage.add(new SensorData(timeBefore, sumOfSpeeds / numberOfSpeeds));
+        
+        return resultsWithTheAverage;
+    }
+
+    private void printTheResultsToOutputFile(List<SensorData> resultsWithTheAverage) throws FileNotFoundException {
+        String fileName = this.outputFileName + this.outputFilesGeneraded + ".csv";
+        try (PrintWriter writer = new PrintWriter(new File(fileName))) {
+            resultsWithTheAverage
+                    .forEach(data -> writer.println(data.getTime() + "," + data.getSpeed()));
+        }
         this.outputFilesGeneraded++;
     }
 }
