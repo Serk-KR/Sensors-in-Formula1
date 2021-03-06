@@ -23,24 +23,25 @@ public class SensorsController {
     private SensorsDataAggregator aggregator;
     
     public SensorsController(List<String> filesPath) {
-        aggregator = new SensorsDataAggregator();
-        listSensorsReaders = createSensorFilesReders(filesPath);
+        this.aggregator = new SensorsDataAggregator();
+        this.listSensorsReaders = createSensorFilesReders(filesPath);
         
         // Create a thread pool with as many threads as the system where the program has
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     private List<SensorFileReader> createSensorFilesReders(List<String> filesPath) {
-        return filesPath.stream().map(path -> new SensorFileReader(aggregator, path)).collect(Collectors.toList());
+        return filesPath.stream().map(path -> new SensorFileReader(this.aggregator, path)).collect(Collectors.toList());
     }
 
     public void readIndefinitelySensorsFiles() {
-        listSensorsReaders.forEach(sensorReader -> {
+        this.listSensorsReaders.forEach(sensorReader -> {
             executor.execute(sensorReader);
         });
     }
 
     public void stopReadingSensorsFiles() {
-        // TODO -> Stop all threads which are reading indefenedly (created in runs methods of each sensorFileRead)
+        this.listSensorsReaders.forEach(sensorReader -> sensorReader.stopReading());
+        executor.shutdown();
     }
 }

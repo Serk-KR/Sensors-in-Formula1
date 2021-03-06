@@ -20,6 +20,7 @@ public class SensorFileReader implements Runnable {
 
     private SensorsDataAggregator aggregator;
     private File file;
+    private boolean stopReadingFile = false;
 
     public SensorFileReader(SensorsDataAggregator aggregator, String filePath) {
         this.aggregator = aggregator;
@@ -31,7 +32,7 @@ public class SensorFileReader implements Runnable {
         String line;
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(file));
-            while (true) {
+            while (!stopReadingFile) {
                 line = reader.readLine();
                 System.out.println("Thread: " + Thread.currentThread().getName() + " | File: " + file.getName() + " | Line: " + line);
                 if (line == null) {
@@ -39,6 +40,7 @@ public class SensorFileReader implements Runnable {
                     System.out.println("Thread sleep - 3s");
                 }
             }
+            reader.close();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         } catch (FileNotFoundException ex) {
@@ -46,6 +48,10 @@ public class SensorFileReader implements Runnable {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public void stopReading() {
+        this.stopReadingFile = true;
     }
 
 }

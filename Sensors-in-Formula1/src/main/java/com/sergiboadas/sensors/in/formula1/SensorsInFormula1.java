@@ -29,7 +29,7 @@ public class SensorsInFormula1 {
         return listPaths;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // Read all files of resources folder
         String resourcesPath = "resources/";
         List<String> filesPaths = getFilesPathsOfTheFolder(resourcesPath);
@@ -40,6 +40,7 @@ public class SensorsInFormula1 {
         
         sensorsController.readIndefinitelySensorsFiles();
         
+        Thread.sleep(10000); // Stop the execution 10 seconds and then finalize it
         sensorsController.stopReadingSensorsFiles();
     }
     
