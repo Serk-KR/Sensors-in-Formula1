@@ -14,8 +14,8 @@ rm -rf SENSORS-IN-FORMULA1/		# Delete the current folder where the jar and resou
 mkdir SENSORS-IN-FORMULA1/		# Create the folder again
 
 cp -r resources/ SENSORS-IN-FORMULA1/	# Copy the resources folder where there are the sensors files to the new folder created
-mv target/Sensors-in-Formula1-1.0-jar-with-dependencies.jar SENSORS-IN-FORMULA1/ 	# Moved the .jar to the new folder 
+mv target/*.jar SENSORS-IN-FORMULA1/ 	# Moved the .jar to the new folder 
 
-rm -rf target/ 	# Delete the target folder
+#rm -rf target/ 	# Delete the target folder
 
 
