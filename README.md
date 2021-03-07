@@ -32,3 +32,7 @@
 
 * **Sergi Boadas Vilagran** - *Code and documentation* - [Sergi's github profile](https://github.com/Serk-KR)
  
+## How to run the code 📄
+
+First of all, you have to download or clone this repository and then execute the script "compileProgram". Then will appear the jar at a new folder called SENSORS-IN-FORMULA1. Once it appears, go inside it and then you have to execute using the following sentence:
+ * **java -jar Sensors-in-Formula1-1.0-jar-with-dependencies.jar**
