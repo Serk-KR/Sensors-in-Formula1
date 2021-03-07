@@ -13,17 +13,40 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author Sergi
  */
 public class SensorsDataAggregator {
-    private LinkedBlockingQueue<SensorData> sensorsData;
-    
+
+    private final LinkedBlockingQueue<SensorData> sensorsData; //Queue for storing all the sensors data
+    private boolean newDataAdded; //Indicate if exist some new information or not
+
     public SensorsDataAggregator() {
         sensorsData = new LinkedBlockingQueue<>();
+        newDataAdded = false;
     }
+
     public void addSensorData(SensorData data) {
         sensorsData.add(data);
+        newDataAdded = true;
     }
 
     public LinkedBlockingQueue<SensorData> getSensorsData() {
         return sensorsData;
     }
-    
+
+    /**
+     * Returns if exists some new data read
+     *
+     * @param resourcesPath the location of the resources folder
+     * @return if exists some new data
+     */
+    public boolean isNewDataAdded() {
+        return newDataAdded;
+    }
+
+    /**
+     * Resorte the variable to false in order to indicate that at this 
+     * point don't exists new information (right now)
+     *
+     */
+    public void resetNewDataAdded() {
+        newDataAdded = false;
+    }
 }
