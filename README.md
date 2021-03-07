@@ -33,6 +33,13 @@
 * **Sergi Boadas Vilagran** - *Code and documentation* - [Sergi's github profile](https://github.com/Serk-KR)
  
 ## How to run the code 📄
+Using an IDE like Netbeans and executing it. If you add some new data in some sensors files located in resources folder, then the program will create a new output file of the results
 
-First of all, you have to download or clone this repository and then execute the script "compileProgram". Then will appear the jar at a new folder called SENSORS-IN-FORMULA1. Once it appears, go inside it and then you have to execute using the following sentence:
+## Future work 
+
+First of all, improve the code, make it more generic and finally make that work using the jar file.
+For executing the jar file, you have to download or clone this repository and then execute the script "compileProgram". Then will appear the jar at a new folder called SENSORS-IN-FORMULA1. Once it appears, go inside it and then you have to execute using the following sentence:
  * **java -jar Sensors-in-Formula1-1.0-jar-with-dependencies.jar**
+(Executing the program using the jar doesn't work as expected because never detect that the sensors files changes)
+
+**So right now, in order to see that the code produces the expected output, you need t run it using an IDE like Netbeans**
