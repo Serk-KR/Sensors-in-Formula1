@@ -14,10 +14,11 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>SensorsInFormula1</mainClass>
+                            <mainClass>com.sergiboadas.sensors.in.formula1.SensorsInFormula1</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
